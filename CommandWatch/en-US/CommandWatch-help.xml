@@ -51,6 +51,9 @@
           <maml:name>NoClear</maml:name>
         </command:parameter>
         <command:parameter>
+          <maml:name>StreamOutput</maml:name>
+        </command:parameter>
+        <command:parameter>
           <maml:name>Count</maml:name>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         </command:parameter>
@@ -114,6 +117,9 @@
           <maml:name>NoClear</maml:name>
         </command:parameter>
         <command:parameter>
+          <maml:name>StreamOutput</maml:name>
+        </command:parameter>
+        <command:parameter>
           <maml:name>Count</maml:name>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         </command:parameter>
@@ -172,6 +178,9 @@
         </command:parameter>
         <command:parameter>
           <maml:name>NoClear</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>StreamOutput</maml:name>
         </command:parameter>
         <command:parameter>
           <maml:name>Count</maml:name>
@@ -252,6 +261,12 @@
           <maml:para>Skips Clear-Host between iterations. Handy for CI logs or transcripts where you want to retain history.</maml:para>
         </maml:description>
       </command:parameter>
+      <command:parameter>
+        <maml:name>StreamOutput</maml:name>
+        <maml:description>
+          <maml:para>Streams native command output to the console as it arrives while still capturing text for logging or -PassThru. Cannot be combined with -Differences or -DifferencesPermanent because diff rendering requires buffered output.</maml:para>
+        </maml:description>
+      </command:parameter>
       <command:parameter aliases="d">
         <maml:name>Differences</maml:name>
         <maml:description>
@@ -326,9 +341,9 @@
     <command:examples>
       <command:example>
         <maml:title>Example 1</maml:title>
-        <command:code>Invoke-CommandWatch -n 1.5 -UseExec -- ping 1.1.1.1</command:code>
+        <command:code>Invoke-CommandWatch -n 3 -UseExec ping -Args '-n','1','1.1.1.1' -StreamOutput</command:code>
         <maml:description>
-          <maml:para>Executes ping every 1.5 seconds with the standard header and console refresh.</maml:para>
+          <maml:para>Streams a single ICMP request every three seconds so each reply stays visible for the full interval.</maml:para>
         </maml:description>
       </command:example>
       <command:example>

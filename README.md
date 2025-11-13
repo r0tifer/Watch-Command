@@ -21,15 +21,29 @@ Want it available everywhere? Copy the `CommandWatch` folder into a path listed 
 
 ### Run commands
 ```powershell
-Invoke-CommandWatch -n 1.5 -UseExec -- ping 1.1.1.1
-Invoke-CommandWatch -n 2 -t -- Get-Process
-Watch-Command -n 2 -- Get-Service   # legacy-friendly alias
+Invoke-CommandWatch -n 1.5 -Count 1 -UseExec ping -Args '1.1.1.1'
+Invoke-CommandWatch -n 3 -UseExec ping -Args '-n','1','1.1.1.1' -StreamOutput   # watch-style live ping
+Invoke-CommandWatch -n 2 -t -Command 'Get-Process'
+Watch-Command -n 2 Get-Service   # legacy-friendly alias
 Invoke-CommandWatch -Command "'tick-' + (Get-Random)" -Differences -Color -ChangeExit
 ```
 
+Sample output for the first command:
+```
+Every 1.5s: ping 1.1.1.1 2025-11-13 08:17:30 [exit:0] [iter:1]
+
+Pinging 1.1.1.1 with 32 bytes of data:
+Reply from 1.1.1.1: bytes=32 time=8ms TTL=58
+Reply from 1.1.1.1: bytes=32 time=8ms TTL=58
+Reply from 1.1.1.1: bytes=32 time=8ms TTL=58
+Reply from 1.1.1.1: bytes=32 time=8ms TTL=58
+```
+Tip: the console is cleared before each iteration, so adding `-Count 1` (as above) or `-NoClear` keeps the ping output visible when the command finishes; use `-StreamOutput` when you want native command output to appear live during each loop.
+
 ### Key switches
 - `-Interval` / `-n` tune the cadence; `-Count` stops after N iterations.
-- `-UseExec` (with `--` and `-Args`) executes native commands via `&`.
+- `-UseExec` (with `-Args` for native parameters) executes external commands via `&`.
+- `-StreamOutput` mirrors native command output live (great for ping/traceroute) while still capturing text for logs.
 - `-NoTitle`, `-NoClear`, `-NoWrap` tailor output for CI or logging.
 - `-PassThru` yields `CommandWatch.TickResult` objects (timestamp, iteration, exit code, body) for piping or exporting.
 - `-Differences`, `-DifferencesPermanent`, and `-Color` highlight changes between runs.

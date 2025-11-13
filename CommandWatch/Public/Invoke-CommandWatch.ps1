@@ -37,6 +37,11 @@
 .PARAMETER NoClear
     Skip Clear-Host between iterations (useful for CI logs / transcript captures).
 
+.PARAMETER StreamOutput
+    Stream command output directly to the console as it arrives (native tools like ping show per-iteration results
+    immediately). Incompatible with -Differences/-DifferencesPermanent because diff rendering requires buffered
+    output.
+
 .PARAMETER Differences
     Show only differences compared to the previous iteration, with +/- prefixes (optionally colorized).
 
@@ -74,8 +79,8 @@
     Defaults can be persisted via Set-CommandWatchConfig / Get-CommandWatchConfig.
 
 .EXAMPLE
-    Invoke-CommandWatch -n 1.5 -UseExec -- ping 1.1.1.1
-    Runs ping every 1.5 seconds, showing headers and clearing between iterations.
+    Invoke-CommandWatch -n 3 -UseExec ping -Args '-n','1','1.1.1.1' -StreamOutput
+    Streams a single ICMP request every three seconds so each reply is visible for the full interval.
 
 .EXAMPLE
     Invoke-CommandWatch -Command "Get-Process | Sort-Object CPU -Descending | Select -First 5" -Count 3 -PassThru -NoClear -NoTitle
@@ -132,6 +137,8 @@ function Invoke-CommandWatch {
         [switch]$NoWrap,
 
         [switch]$NoClear,
+
+        [switch]$StreamOutput,
 
         [int]$Count,
 
@@ -212,6 +219,10 @@ function Invoke-CommandWatch {
         if ($Args) { "$Command $($Args -join ' ')" } else { $Command }
     } else { $Command }
 
+    if ($StreamOutput -and ($Differences -or $DifferencesPermanent)) {
+        throw '-StreamOutput cannot be combined with -Differences or -DifferencesPermanent.'
+    }
+
     $diffMode = $Differences -or $DifferencesPermanent
     $diffModeLabel = if ($DifferencesPermanent) { 'Permanent' } elseif ($Differences) { 'Rolling' } else { 'None' }
 
@@ -246,7 +257,7 @@ function Invoke-CommandWatch {
             }
 
             try {
-                $result = Invoke-Once -Command $Command -Args $Args -UseExec:($PSCmdlet.ParameterSetName -eq 'Exec' -or $UseExec.IsPresent) -Width $effectiveWidth -ErrorAction Stop
+                $result = Invoke-Once -Command $Command -Args $Args -UseExec:($PSCmdlet.ParameterSetName -eq 'Exec' -or $UseExec.IsPresent) -Width $effectiveWidth -StreamOutput:$StreamOutput -ErrorAction Stop
             } catch {
                 Write-Error -ErrorRecord $_
                 $result = [pscustomobject]@{ Output = ($_ | Out-String -Width $effectiveWidth); ExitCode = 1 }
@@ -297,18 +308,22 @@ function Invoke-CommandWatch {
                 }
             }
 
-            if ($renderDiffEntries) {
-                foreach ($entry in $diffEntries) {
-                    if ($Color) {
-                        $fg = if ($entry.Type -eq 'Added') { 'Green' } else { 'Red' }
-                        Write-Host $entry.Text -ForegroundColor $fg
-                    } else {
-                        Write-Host $entry.Text
+            $alreadyStreamed = ($StreamOutput -and $result.PSObject.Properties.Match('Streamed').Count -gt 0 -and $result.Streamed)
+
+            if (-not $alreadyStreamed) {
+                if ($renderDiffEntries) {
+                    foreach ($entry in $diffEntries) {
+                        if ($Color) {
+                            $fg = if ($entry.Type -eq 'Added') { 'Green' } else { 'Red' }
+                            Write-Host $entry.Text -ForegroundColor $fg
+                        } else {
+                            Write-Host $entry.Text
+                        }
                     }
-                }
-            } else {
-                foreach ($line in $linesToRender) {
-                    Write-Host $line
+                } else {
+                    foreach ($line in $linesToRender) {
+                        Write-Host $line
+                    }
                 }
             }
 

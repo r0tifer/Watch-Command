@@ -23,6 +23,8 @@ LONG DESCRIPTION
     Key capabilities:
       * Exec mode (`-UseExec`/`-Args`) for running native tools, plus expression
         mode for PowerShell script blocks or strings.
+      * Live streaming via `-StreamOutput` so fast native commands (ping, tracert)
+        show their responses immediately while still being captured for logging.
       * Diff-focused views via `-Differences` or `-DifferencesPermanent`, with
         additive coloring when `-Color` is specified.
       * Output customization: suppress headers (`-NoTitle`), skip Clear-Host
@@ -93,7 +95,7 @@ LOGGING AND AUTOMATION
 
 EXAMPLES
     Example 1: Tail ICMP latency with exec mode
-        Invoke-CommandWatch -n 1.5 -UseExec -- ping 1.1.1.1
+        Invoke-CommandWatch -n 3 -UseExec ping -Args '-n','1','1.1.1.1' -StreamOutput
 
     Example 2: Capture CPU-heavy processes without UI overhead
         Invoke-CommandWatch -Command "Get-Process | Sort-Object CPU -Descending | Select -First 5" -Count 3 -NoTitle -NoClear -PassThru | Export-Csv watch.csv

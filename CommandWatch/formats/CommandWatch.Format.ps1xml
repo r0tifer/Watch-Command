@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <ViewDefinitions>
+    <View>
+      <Name>CommandWatchTickResultTable</Name>
+      <ViewSelectedBy>
+        <TypeName>CommandWatch.TickResult</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader><Width>24</Width></TableColumnHeader>
+          <TableColumnHeader><Width>40</Width></TableColumnHeader>
+          <TableColumnHeader><Width>8</Width></TableColumnHeader>
+          <TableColumnHeader><Width>8</Width></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Timestamp</PropertyName>
+                <FormatString>{0:yyyy-MM-dd HH:mm:ss}</FormatString>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>DisplayCommand</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>ExitCode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Iteration</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>

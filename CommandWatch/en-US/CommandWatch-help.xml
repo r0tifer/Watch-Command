@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<helpItems xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" schema="maml">
+  <command:command>
+    <command:details>
+      <command:name>Invoke-CommandWatch</command:name>
+      <command:verb>Invoke</command:verb>
+      <command:noun>CommandWatch</command:noun>
+      <maml:description>
+        <maml:para>Runs a PowerShell expression or external executable on a fixed interval, mirroring the Linux watch utility while adding diffing, logging, and automation features.</maml:para>
+      </maml:description>
+    </command:details>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Invoke-CommandWatch</maml:name>
+        <command:parameter required="true" position="0">
+          <maml:name>Command</maml:name>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter aliases="n">
+          <maml:name>Interval</maml:name>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Precise</maml:name>
+        </command:parameter>
+        <command:parameter aliases="t">
+          <maml:name>NoTitle</maml:name>
+        </command:parameter>
+        <command:parameter aliases="d">
+          <maml:name>Differences</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>DifferencesPermanent</maml:name>
+        </command:parameter>
+        <command:parameter aliases="g">
+          <maml:name>ChangeExit</maml:name>
+        </command:parameter>
+        <command:parameter aliases="e">
+          <maml:name>ErrorExit</maml:name>
+        </command:parameter>
+        <command:parameter aliases="b">
+          <maml:name>Beep</maml:name>
+        </command:parameter>
+        <command:parameter aliases="c">
+          <maml:name>Color</maml:name>
+        </command:parameter>
+        <command:parameter aliases="w">
+          <maml:name>NoWrap</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>NoClear</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Count</maml:name>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Width</maml:name>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>PassThru</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>LogPath</maml:name>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Invoke-CommandWatch</maml:name>
+        <command:parameter required="true" position="0">
+          <maml:name>Command</maml:name>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>UseExec</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Args</maml:name>
+          <command:parameterValue required="false" variableLength="true">String[]</command:parameterValue>
+        </command:parameter>
+        <command:parameter aliases="n">
+          <maml:name>Interval</maml:name>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Precise</maml:name>
+        </command:parameter>
+        <command:parameter aliases="t">
+          <maml:name>NoTitle</maml:name>
+        </command:parameter>
+        <command:parameter aliases="d">
+          <maml:name>Differences</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>DifferencesPermanent</maml:name>
+        </command:parameter>
+        <command:parameter aliases="g">
+          <maml:name>ChangeExit</maml:name>
+        </command:parameter>
+        <command:parameter aliases="e">
+          <maml:name>ErrorExit</maml:name>
+        </command:parameter>
+        <command:parameter aliases="b">
+          <maml:name>Beep</maml:name>
+        </command:parameter>
+        <command:parameter aliases="c">
+          <maml:name>Color</maml:name>
+        </command:parameter>
+        <command:parameter aliases="w">
+          <maml:name>NoWrap</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>NoClear</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Count</maml:name>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Width</maml:name>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>PassThru</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>LogPath</maml:name>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Invoke-CommandWatch</maml:name>
+        <command:parameter required="true" position="0">
+          <maml:name>Command</maml:name>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter aliases="wait">
+          <maml:name>waitTime</maml:name>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter aliases="i">
+          <maml:name>waitInterval</maml:name>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Precise</maml:name>
+        </command:parameter>
+        <command:parameter aliases="t">
+          <maml:name>NoTitle</maml:name>
+        </command:parameter>
+        <command:parameter aliases="d">
+          <maml:name>Differences</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>DifferencesPermanent</maml:name>
+        </command:parameter>
+        <command:parameter aliases="g">
+          <maml:name>ChangeExit</maml:name>
+        </command:parameter>
+        <command:parameter aliases="e">
+          <maml:name>ErrorExit</maml:name>
+        </command:parameter>
+        <command:parameter aliases="b">
+          <maml:name>Beep</maml:name>
+        </command:parameter>
+        <command:parameter aliases="c">
+          <maml:name>Color</maml:name>
+        </command:parameter>
+        <command:parameter aliases="w">
+          <maml:name>NoWrap</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>NoClear</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Count</maml:name>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>Width</maml:name>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>PassThru</maml:name>
+        </command:parameter>
+        <command:parameter>
+          <maml:name>LogPath</maml:name>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <maml:description>
+      <maml:para>Invoke-CommandWatch refreshes the console each iteration (unless you opt out with -NoClear) and prints a header that captures timing, exit status, and iteration count. Output can be truncated, diffed, colorized, logged, or emitted as structured objects for downstream automation. Stored defaults from Set-CommandWatchConfig are honored automatically.</maml:para>
+    </maml:description>
+    <command:parameters>
+      <command:parameter required="true" position="0">
+        <maml:name>Command</maml:name>
+        <maml:description>
+          <maml:para>PowerShell expression or external command to run. Accepts short aliases such as -ct. When -UseExec is supplied, the string is invoked via the call operator so native tools run without an extra PowerShell layer.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>UseExec</maml:name>
+        <maml:description>
+          <maml:para>Treats Command as an external executable and uses the call operator (&amp;) with -Args. This prevents string evaluation as PowerShell code and mirrors the Linux watch exec mode.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>Args</maml:name>
+        <maml:description>
+          <maml:para>Argument array passed to the external executable when -UseExec is true.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">String[]</command:parameterValue>
+      </command:parameter>
+      <command:parameter aliases="n">
+        <maml:name>Interval</maml:name>
+        <maml:description>
+          <maml:para>Seconds between iterations. Defaults to 2 unless overridden via parameters or persisted defaults.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>Precise</maml:name>
+        <maml:description>
+          <maml:para>Retained for backward compatibility. Precise Stopwatch scheduling is always enabled, so the switch is a no-op.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>Count</maml:name>
+        <maml:description>
+          <maml:para>Stop after the specified number of iterations. Useful for sampling a finite number of snapshots.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+      </command:parameter>
+      <command:parameter aliases="t">
+        <maml:name>NoTitle</maml:name>
+        <maml:description>
+          <maml:para>Suppresses the header block while still clearing unless -NoClear is also specified.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter aliases="w">
+        <maml:name>NoWrap</maml:name>
+        <maml:description>
+          <maml:para>Truncates long lines to an ellipsis-based width instead of allowing console wrapping.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>NoClear</maml:name>
+        <maml:description>
+          <maml:para>Skips Clear-Host between iterations. Handy for CI logs or transcripts where you want to retain history.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter aliases="d">
+        <maml:name>Differences</maml:name>
+        <maml:description>
+          <maml:para>Displays +/- diff lines compared to the immediately previous iteration.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>DifferencesPermanent</maml:name>
+        <maml:description>
+          <maml:para>Locks the diff baseline to the first iteration so subsequent iterations are compared against the original output.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter aliases="g">
+        <maml:name>ChangeExit</maml:name>
+        <maml:description>
+          <maml:para>Stops the loop as soon as the output changes. Combine with diff mode to detect drift.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter aliases="e">
+        <maml:name>ErrorExit</maml:name>
+        <maml:description>
+          <maml:para>Stops immediately when the command returns a non-zero exit code.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter aliases="b">
+        <maml:name>Beep</maml:name>
+        <maml:description>
+          <maml:para>Emits a console beep whenever a non-zero exit code is observed.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter aliases="c">
+        <maml:name>Color</maml:name>
+        <maml:description>
+          <maml:para>Colorizes headers and diff lines (green additions, red removals) for quicker scanning.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>Width</maml:name>
+        <maml:description>
+          <maml:para>Overrides the detected console width when wrapping or truncating output.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+      </command:parameter>
+      <command:parameter aliases="wait">
+        <maml:name>waitTime</maml:name>
+        <maml:description>
+          <maml:para>Legacy interval parameter kept for compatibility. Maps directly to -Interval, and emits guidance to adopt the modern switch.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+      </command:parameter>
+      <command:parameter aliases="i">
+        <maml:name>waitInterval</maml:name>
+        <maml:description>
+          <maml:para>Units for -waitTime (ms|milliseconds|s|seconds|m|minutes|h|hours).</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>PassThru</maml:name>
+        <maml:description>
+          <maml:para>Outputs a CommandWatch.TickResult object per iteration (Command, DisplayLines, DiffLines, ExitCode, Timestamp, Iteration). Ideal for logging or further processing.</maml:para>
+        </maml:description>
+      </command:parameter>
+      <command:parameter>
+        <maml:name>LogPath</maml:name>
+        <maml:description>
+          <maml:para>Appends timestamped summaries (`YYYY-MM-DDTHH:mm:ssZ command [exit:n] [iter:n]`) to the specified file. Directories are created automatically.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+      </command:parameter>
+    </command:parameters>
+    <command:examples>
+      <command:example>
+        <maml:title>Example 1</maml:title>
+        <command:code>Invoke-CommandWatch -n 1.5 -UseExec -- ping 1.1.1.1</command:code>
+        <maml:description>
+          <maml:para>Executes ping every 1.5 seconds with the standard header and console refresh.</maml:para>
+        </maml:description>
+      </command:example>
+      <command:example>
+        <maml:title>Example 2</maml:title>
+        <command:code>Invoke-CommandWatch -Command "Get-Process | Sort-Object CPU -Descending | Select -First 5" -Count 3 -NoTitle -NoClear -PassThru | Export-Csv .\watch.csv</command:code>
+        <maml:description>
+          <maml:para>Collects three iterations of process data without clearing the console and exports the structured PassThru objects for later analysis.</maml:para>
+        </maml:description>
+      </command:example>
+      <command:example>
+        <maml:title>Example 3</maml:title>
+        <command:code>Invoke-CommandWatch -Command "Get-Content .\config.json" -DifferencesPermanent -Color -ChangeExit</command:code>
+        <maml:description>
+          <maml:para>Highlights configuration drift, colorizes changes, and exits as soon as a difference is detected.</maml:para>
+        </maml:description>
+      </command:example>
+      <command:example>
+        <maml:title>Example 4</maml:title>
+        <command:code>Invoke-CommandWatch -Command "'tick-' + (Get-Random)" -LogPath .\logs\watch.log -PassThru</command:code>
+        <maml:description>
+          <maml:para>Streams both log entries and structured objects so the run can be monitored live and reviewed later.</maml:para>
+        </maml:description>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>about_CommandWatch</maml:linkText>
+        <maml:uri>about_CommandWatch</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Get-CommandWatchConfig</maml:linkText>
+        <maml:uri>Get-CommandWatchConfig</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Set-CommandWatchConfig</maml:linkText>
+        <maml:uri>Set-CommandWatchConfig</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+
+  <command:command>
+    <command:details>
+      <command:name>Get-CommandWatchConfig</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>CommandWatchConfig</command:noun>
+      <maml:description>
+        <maml:para>Displays the resolved configuration path plus the default values currently stored on disk (merged with built-in fallbacks).</maml:para>
+      </maml:description>
+    </command:details>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-CommandWatchConfig</maml:name>
+      </command:syntaxItem>
+    </command:syntax>
+    <maml:description>
+      <maml:para>Use this command to inspect which defaults will be applied to Invoke-CommandWatch. The config path is `%APPDATA%\CommandWatch\config.json` on Windows or `$HOME/.config/CommandWatch/config.json` on Unix-like systems unless the COMMANDWATCH_CONFIG_PATH environment variable overrides it.</maml:para>
+    </maml:description>
+    <command:examples>
+      <command:example>
+        <maml:title>Example 1</maml:title>
+        <command:code>Get-CommandWatchConfig</command:code>
+        <maml:description>
+          <maml:para>Outputs the config path and merged defaults, making it easy to confirm which values will auto-populate.</maml:para>
+        </maml:description>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Set-CommandWatchConfig</maml:linkText>
+        <maml:uri>Set-CommandWatchConfig</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Invoke-CommandWatch</maml:linkText>
+        <maml:uri>Invoke-CommandWatch</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+
+  <command:command>
+    <command:details>
+      <command:name>Set-CommandWatchConfig</command:name>
+      <command:verb>Set</command:verb>
+      <command:noun>CommandWatchConfig</command:noun>
+      <maml:description>
+        <maml:para>Persists default settings for Invoke-CommandWatch so future runs inherit your preferred behavior.</maml:para>
+      </maml:description>
+    </command:details>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Set-CommandWatchConfig</maml:name>
+        <command:parameter required="true" position="0" pipelineInput="true">
+          <maml:name>Defaults</maml:name>
+          <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <maml:description>
+      <maml:para>Provide a hashtable containing any combination of supported keys (Interval, NoTitle, NoWrap, NoClear, Width, LogPath, etc.). Existing values are merged with your input, and setting a key to $null removes it. The result of Get-CommandWatchConfig is returned so you can immediately verify the persisted defaults.</maml:para>
+    </maml:description>
+    <command:parameters>
+      <command:parameter required="true" position="0" pipelineInput="true">
+        <maml:name>Defaults</maml:name>
+        <maml:description>
+          <maml:para>Hashtable of default settings to persist. Accepts pipeline input to make it easy to pipe from PSCustomObject or hashtable literals. Use $null to clear a value (for example, @{ LogPath = $null }).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+      </command:parameter>
+    </command:parameters>
+    <command:examples>
+      <command:example>
+        <maml:title>Example 1</maml:title>
+        <command:code>Set-CommandWatchConfig -Defaults @{ Interval = 1.5; NoClear = $true; LogPath = '.\logs\watch.log' }</command:code>
+        <maml:description>
+          <maml:para>Updates persisted defaults so new Invoke-CommandWatch sessions run every 1.5 seconds, avoid Clear-Host, and append to the specified log.</maml:para>
+        </maml:description>
+      </command:example>
+      <command:example>
+        <maml:title>Example 2</maml:title>
+        <command:code>@{ LogPath = $null } | Set-CommandWatchConfig</command:code>
+        <maml:description>
+          <maml:para>Demonstrates piping a hashtable to remove the stored LogPath default.</maml:para>
+        </maml:description>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Get-CommandWatchConfig</maml:linkText>
+        <maml:uri>Get-CommandWatchConfig</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Invoke-CommandWatch</maml:linkText>
+        <maml:uri>Invoke-CommandWatch</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+</helpItems>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Types>
+  <Type>
+    <Name>CommandWatch.TickResult</Name>
+    <Members>
+      <ScriptProperty>
+        <Name>Summary</Name>
+        <GetScriptBlock>
+          "{0} {1} [exit:{2}] [iter:{3}]" -f $this.Timestamp.ToString('yyyy-MM-dd HH:mm:ss'), $this.DisplayCommand, $this.ExitCode, $this.Iteration
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>HasChanges</Name>
+        <GetScriptBlock>
+          ($this.DiffLines -and $this.DiffLines.Count -gt 0)
+        </GetScriptBlock>
+      </ScriptProperty>
+    </Members>
+  </Type>
+  <Type>
+    <Name>CommandWatch.Config</Name>
+    <Members>
+      <ScriptProperty>
+        <Name>Interval</Name>
+        <GetScriptBlock>$this.Defaults['Interval']</GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>NoTitle</Name>
+        <GetScriptBlock>$this.Defaults['NoTitle']</GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>NoWrap</Name>
+        <GetScriptBlock>$this.Defaults['NoWrap']</GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>NoClear</Name>
+        <GetScriptBlock>$this.Defaults['NoClear']</GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>Width</Name>
+        <GetScriptBlock>$this.Defaults['Width']</GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>LogPath</Name>
+        <GetScriptBlock>$this.Defaults['LogPath']</GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>AsJson</Name>
+        <GetScriptBlock>$this.Defaults | ConvertTo-Json -Depth 4</GetScriptBlock>
+      </ScriptProperty>
+    </Members>
+  </Type>
+</Types>

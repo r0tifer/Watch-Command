@@ -1,0 +1,112 @@
+TOPIC
+    about_CommandWatch
+
+SHORT DESCRIPTION
+    CommandWatch is a PowerShell-native, interval-based runner that mirrors the
+    behavior of Linux `watch` while layering in diffing, logging, and automation
+    primitives tailored for modern PowerShell workflows.
+
+LONG DESCRIPTION
+    CommandWatch ships as a script module (`CommandWatch.psm1`) with a manifest
+    that exports three public commands and the legacy alias `Watch-Command`. It
+    focuses on quick iteration loops for troubleshooting, observability, and CI
+    log streaming scenarios.
+
+    Invoke-CommandWatch repeatedly executes either a PowerShell expression or an
+    external executable, refreshes the console (unless `-NoClear`), and prints a
+    header that includes the interval, timestamp, iteration count, and last exit
+    code. It uses a Stopwatch-driven scheduler with drift correction, so precise
+    intervals are honored even after long runs. Legacy parameters such as
+    `-waitTime/-waitInterval` remain available but map directly to `-Interval`
+    (alias `-n`) and emit guidance to adopt the modern switches.
+
+    Key capabilities:
+      * Exec mode (`-UseExec`/`-Args`) for running native tools, plus expression
+        mode for PowerShell script blocks or strings.
+      * Diff-focused views via `-Differences` or `-DifferencesPermanent`, with
+        additive coloring when `-Color` is specified.
+      * Output customization: suppress headers (`-NoTitle`), skip Clear-Host
+        (`-NoClear`), truncate to width (`-NoWrap`/`-Width`), or send raw output.
+      * Structured iteration data with `-PassThru`, tagged as
+        `CommandWatch.TickResult` for custom formatting (see
+        `formats\CommandWatch.Format.ps1xml`).
+      * Automation primitives: stop-on-change (`-ChangeExit`), stop-on-error
+        (`-ErrorExit`/`-Beep`), bounded loops (`-Count`), or log summaries to disk
+        (`-LogPath`) with automatic directory creation.
+      * Config persistence via `Get-CommandWatchConfig` and
+        `Set-CommandWatchConfig`, stored under `%APPDATA%\CommandWatch` on Windows
+        or `$HOME/.config/CommandWatch` elsewhere (overridable by the
+        `COMMANDWATCH_CONFIG_PATH` environment variable).
+
+    Project layout highlights:
+      * `Public\` contains the exported commands listed below.
+      * `Private\` holds helper functions such as config IO, diff generation, and
+        interval waiting.
+      * `formats\` and `types\` include ps1xml stubs for custom views; PassThru
+        objects already light up the table view defined there.
+      * `examples\examples.ps1` surfaces runnable samples that mirror the help
+        examples.
+      * `tests\CommandWatch.Tests.ps1` provides Pester coverage for the public
+        surface area, scheduler, diffing, and config persistence.
+
+PUBLIC COMMANDS
+    Invoke-CommandWatch
+        Core loop. Accepts expressions or exec commands, renders headers, diffs,
+        and optionally returns per-iteration objects. Alias: `Watch-Command`.
+
+    Get-CommandWatchConfig
+        Displays the resolved configuration path plus currently stored defaults,
+        merged with baked-in fallbacks.
+
+    Set-CommandWatchConfig
+        Persists default values (interval, wrapping, title visibility, width,
+        log path, etc.) so future Invoke-CommandWatch calls inherit them.
+
+CONFIGURATION
+    Configuration is stored as JSON. `Get-CommandWatchConfig` reveals the exact
+    path and effective defaults. Use `Set-CommandWatchConfig -Defaults` with a
+    hashtable to set or clear keys; passing `$null` removes a stored default.
+    When `COMMANDWATCH_CONFIG_PATH` is defined, both cmdlets honor that path,
+    enabling per-repo or CI-specific settings without touching the default
+    profile location.
+
+TICK RESULTS AND FORMATTING
+    Each PassThru object includes Command, DisplayCommand, Output, DisplayLines,
+    DiffLines, ExitCode, Iteration, Timestamp, and the parameter set that was
+    used. They carry the `CommandWatch.TickResult` type name so the included
+    format view renders a concise table. You can pipe them to `Export-Csv`,
+    `Where-Object`, or custom dashboards for automation.
+
+DIFF MODES
+    `-Differences` compares the current output against the immediately previous
+    iteration. `-DifferencesPermanent` locks the baseline to the first iteration,
+    which is handy for configuration drift detection. Add `-Color` to highlight
+    additions (green) and removals (red); without color the diff markers are
+    still preserved for transcript review.
+
+LOGGING AND AUTOMATION
+    When `-LogPath` is provided (or stored via config), CommandWatch appends
+    timestamped summaries per iteration: ISO timestamp, rendered command, exit
+    code, and iteration number. Directories are created on demand, and failures
+    to log emit warnings without interrupting the loop. Combine `-LogPath` with
+    `-PassThru` to both persist and process results in memory.
+
+EXAMPLES
+    Example 1: Tail ICMP latency with exec mode
+        Invoke-CommandWatch -n 1.5 -UseExec -- ping 1.1.1.1
+
+    Example 2: Capture CPU-heavy processes without UI overhead
+        Invoke-CommandWatch -Command "Get-Process | Sort-Object CPU -Descending | Select -First 5" -Count 3 -NoTitle -NoClear -PassThru | Export-Csv watch.csv
+
+    Example 3: Store defaults for future sessions
+        Set-CommandWatchConfig -Defaults @{ Interval = 1.5; NoClear = $true; LogPath = '.\logs\watch.log' }
+        Invoke-CommandWatch -Command "Get-Service"    # picks up the stored defaults automatically
+
+    Example 4: Highlight drift and stop on change
+        Invoke-CommandWatch -Command "Get-Content .\config.json" -DifferencesPermanent -Color -ChangeExit
+
+SEE ALSO
+    Invoke-CommandWatch
+    Get-CommandWatchConfig
+    Set-CommandWatchConfig
+    Watch-Command

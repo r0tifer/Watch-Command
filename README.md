@@ -9,7 +9,6 @@ CommandWatch is a PowerShell module that mimics the Linux `watch` command: it re
 ### Get the module
 ```powershell
 git clone https://github.com/r0tifer/Watch-Command.git
-Set-Location Watch-Command
 ```
 
 Import directly from the manifest so metadata, formats, and aliases load correctly:
@@ -28,15 +27,16 @@ Watch-Command -n 2 Get-Service   # legacy-friendly alias
 Invoke-CommandWatch -Command "'tick-' + (Get-Random)" -Differences -Color -ChangeExit
 ```
 
-Sample output for the first command:
+Sample output for the live command:
 ```
-Every 1.5s: ping 1.1.1.1 2025-11-13 08:17:30 [exit:0] [iter:1]
+Every 3s: ping -n 1 1.1.1.1 2025-11-13 08:44:46 [exit:0] [iter:1]
 
 Pinging 1.1.1.1 with 32 bytes of data:
-Reply from 1.1.1.1: bytes=32 time=8ms TTL=58
-Reply from 1.1.1.1: bytes=32 time=8ms TTL=58
-Reply from 1.1.1.1: bytes=32 time=8ms TTL=58
-Reply from 1.1.1.1: bytes=32 time=8ms TTL=58
+Reply from 1.1.1.1: bytes=32 time=40ms TTL=58
+Ping statistics for 1.1.1.1:
+    Packets: Sent = 1, Received = 1, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 40ms, Maximum = 40ms, Average = 40ms
 ```
 Tip: the console is cleared before each iteration, so adding `-Count 1` (as above) or `-NoClear` keeps the ping output visible when the command finishes; use `-StreamOutput` when you want native command output to appear live during each loop.
 

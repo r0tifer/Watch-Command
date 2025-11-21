@@ -1,6 +1,6 @@
 @{
     RootModule        = 'CommandWatch.psm1'
-    ModuleVersion     = '0.1.0'
+    ModuleVersion     = '1.0.0'
     GUID              = 'a8d0d7e5-6d6f-4c6d-bb78-7e5f5bc1c5a1'
     Author            = 'Michael Levesque'
     CompanyName       = 'Deeptree, Inc'

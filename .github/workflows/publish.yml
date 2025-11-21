@@ -1,0 +1,130 @@
+name: Build, Test, and Publish CommandWatch
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  MODULE_DIRECTORY: CommandWatch
+  MODULE_NAME: CommandWatch
+
+jobs:
+  test:
+    name: Test (${{ matrix.shell }})
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        shell: [pwsh, powershell]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        shell: ${{ matrix.shell }}
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name Pester -MinimumVersion 5.5.0 -Scope CurrentUser -Force -SkipPublisherCheck
+
+      - name: Run Pester tests
+        shell: ${{ matrix.shell }}
+        run: |
+          Invoke-Pester -Path "$env:MODULE_DIRECTORY/tests" -CI -PassThru
+
+  package:
+    name: Package module artifact
+    runs-on: windows-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate module manifest
+        id: manifest
+        shell: pwsh
+        run: |
+          $manifestPath = Join-Path $env:MODULE_DIRECTORY 'CommandWatch.psd1'
+          $info = Test-ModuleManifest -Path $manifestPath
+          "version=$($info.Version)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Package module contents
+        shell: pwsh
+        env:
+          MODULE_VERSION: ${{ steps.manifest.outputs.version }}
+        run: |
+          $artifactRoot = Join-Path $PWD 'artifacts'
+          New-Item -Path $artifactRoot -ItemType Directory -Force | Out-Null
+          $archivePath = Join-Path $artifactRoot ("$env:MODULE_NAME-$env:MODULE_VERSION.zip")
+          Compress-Archive -Path $env:MODULE_DIRECTORY -DestinationPath $archivePath -Force
+          "ModuleName=$env:MODULE_NAME" | Out-File -FilePath (Join-Path $artifactRoot 'module-info.txt')
+          "ModuleVersion=$env:MODULE_VERSION" | Out-File -FilePath (Join-Path $artifactRoot 'module-info.txt') -Append
+
+      - name: Upload module artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: commandwatch-module
+          path: artifacts
+
+  publish:
+    name: Publish to PowerShell Gallery
+    runs-on: windows-latest
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: publish
+    steps:
+      - name: Download packaged module
+        uses: actions/download-artifact@v4
+        with:
+          name: commandwatch-module
+          path: downloaded
+
+      - name: Expand package
+        id: extraction
+        shell: pwsh
+        run: |
+          $package = Get-ChildItem -Path (Join-Path $PWD 'downloaded') -Filter '*.zip' | Select-Object -First 1
+          if (-not $package) {
+            throw 'Module package was not found in downloaded artifacts.'
+          }
+          $destination = Join-Path $PWD 'package'
+          Expand-Archive -Path $package.FullName -DestinationPath $destination -Force
+          $moduleRoot = Get-ChildItem -Path $destination -Directory | Where-Object { $_.Name -eq $env:MODULE_NAME } | Select-Object -First 1
+          if (-not $moduleRoot) {
+            throw "Expanded archive does not contain the $env:MODULE_NAME directory."
+          }
+          $manifestPath = Join-Path $moduleRoot.FullName 'CommandWatch.psd1'
+          $info = Test-ModuleManifest -Path $manifestPath
+          "version=$($info.Version)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "modulePath=$($moduleRoot.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Ensure tag matches module version
+        shell: pwsh
+        env:
+          MODULE_VERSION: ${{ steps.extraction.outputs.version }}
+        run: |
+          $tagVersion = $env:GITHUB_REF_NAME
+          $expected = "v$env:MODULE_VERSION"
+          if ($tagVersion -ne $expected) {
+            throw "Release tag '$tagVersion' must match module version '$expected'."
+          }
+
+      - name: Publish module to PSGallery
+        shell: pwsh
+        env:
+          MODULE_VERSION: ${{ steps.extraction.outputs.version }}
+          MODULE_PATH: ${{ steps.extraction.outputs.modulePath }}
+          NUGET_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
+        run: |
+          if (-not $env:NUGET_API_KEY) {
+            throw 'PSGALLERY_API_KEY is not configured.'
+          }
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name PowerShellGet -Scope CurrentUser -Force -SkipPublisherCheck
+          Publish-Module -Path $env:MODULE_PATH -NuGetApiKey $env:NUGET_API_KEY -Repository PSGallery -Verbose

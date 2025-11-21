@@ -30,31 +30,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install test dependencies (PowerShell 7)
+      - name: Install Pester 4.10.1 (PowerShell 7)
         if: matrix.shell == 'pwsh'
         shell: pwsh
         run: |
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-          Install-Module -Name Pester -MinimumVersion 5.5.0 -Scope CurrentUser -Force -SkipPublisherCheck
+          Install-Module -Name Pester -RequiredVersion 4.10.1 -Scope CurrentUser -Force -SkipPublisherCheck
 
-      - name: Install test dependencies (Windows PowerShell 5.1)
+      - name: Install Pester 4.10.1 (Windows PowerShell 5.1)
         if: matrix.shell == 'powershell'
         shell: powershell
         run: |
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-          Install-Module -Name Pester -MinimumVersion 5.5.0 -Scope CurrentUser -Force -SkipPublisherCheck
+          Install-Module -Name Pester -RequiredVersion 4.10.1 -Scope CurrentUser -Force -SkipPublisherCheck
 
       - name: Run Pester tests (PowerShell 7)
         if: matrix.shell == 'pwsh'
         shell: pwsh
         run: |
-          Invoke-Pester -Path "$env:MODULE_DIRECTORY/tests" -CI -PassThru
+          $result = Invoke-Pester -Script "$env:MODULE_DIRECTORY/tests" -PassThru
+          if ($result.FailedCount -gt 0) {
+            throw "$($result.FailedCount) tests failed."
+          }
 
       - name: Run Pester tests (Windows PowerShell 5.1)
         if: matrix.shell == 'powershell'
         shell: powershell
         run: |
-          Invoke-Pester -Path "$env:MODULE_DIRECTORY/tests" -CI -PassThru
+          $result = Invoke-Pester -Script "$env:MODULE_DIRECTORY/tests" -PassThru
+          if ($result.FailedCount -gt 0) {
+            throw "$($result.FailedCount) tests failed."
+          }
 
   package:
     name: Package module artifact

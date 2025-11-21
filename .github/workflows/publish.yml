@@ -17,23 +17,42 @@ env:
 
 jobs:
   test:
-    name: Test (${{ matrix.shell }})
+    name: Test (${{ matrix.display }})
     runs-on: windows-latest
     strategy:
       matrix:
-        shell: [pwsh, powershell]
+        include:
+          - shell: pwsh
+            display: PowerShell 7
+          - shell: powershell
+            display: Windows PowerShell 5.1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install test dependencies
-        shell: ${{ matrix.shell }}
+      - name: Install test dependencies (PowerShell 7)
+        if: matrix.shell == 'pwsh'
+        shell: pwsh
         run: |
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
           Install-Module -Name Pester -MinimumVersion 5.5.0 -Scope CurrentUser -Force -SkipPublisherCheck
 
-      - name: Run Pester tests
-        shell: ${{ matrix.shell }}
+      - name: Install test dependencies (Windows PowerShell 5.1)
+        if: matrix.shell == 'powershell'
+        shell: powershell
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name Pester -MinimumVersion 5.5.0 -Scope CurrentUser -Force -SkipPublisherCheck
+
+      - name: Run Pester tests (PowerShell 7)
+        if: matrix.shell == 'pwsh'
+        shell: pwsh
+        run: |
+          Invoke-Pester -Path "$env:MODULE_DIRECTORY/tests" -CI -PassThru
+
+      - name: Run Pester tests (Windows PowerShell 5.1)
+        if: matrix.shell == 'powershell'
+        shell: powershell
         run: |
           Invoke-Pester -Path "$env:MODULE_DIRECTORY/tests" -CI -PassThru
 

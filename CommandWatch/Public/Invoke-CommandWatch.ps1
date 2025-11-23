@@ -414,3 +414,4 @@ function Invoke-CommandWatch {
 
 # Back-compat alias for legacy entry point
 Set-Alias -Name 'Watch-Command' -Value 'Invoke-CommandWatch' -Force
+Set-Alias -Name 'watch' -Value 'Invoke-CommandWatch' -Force

@@ -11,7 +11,7 @@
     CompatiblePSEditions = @('Desktop','Core')
 
     FunctionsToExport = @('Invoke-CommandWatch','Get-CommandWatchConfig','Set-CommandWatchConfig')
-    AliasesToExport   = @('Watch-Command')
+    AliasesToExport   = @('Watch-Command','watch')
     CmdletsToExport   = @()
     VariablesToExport = @()
 
